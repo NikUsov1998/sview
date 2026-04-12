@@ -79,6 +79,22 @@ sview slice(sview* sv, char separator)
 //        expandtabs(tabsize)
 //        find(sub, start, end)
 
+sview capitalize(sview sv)
+{
+  char buffer[512];
+  strncpy(buffer, sv.data, sv.count);
+  size_t i = 0;
+  while (i < sv.count) {
+    buffer[i] = toupper(sv.data[i]);
+    ++i; 
+  }
+  sview result = {
+    .data = buffer,
+    .count = strlen(buffer),
+  };
+  return result;
+}
+
 #define STRING_VIEW_FORMATTING "%.*s"
 #define STRING_VIEW_ARGS(s) (s).count, (s).data
 
@@ -92,5 +108,7 @@ int main(int argc, char* argv[])
   sview test_slice = sv("This, and that");
   sview this = slice(&test_slice, ',');
   printf("|"STRING_VIEW_FORMATTING"|\n", STRING_VIEW_ARGS(this));
+  sview upper = capitalize(name);
+  printf("|"STRING_VIEW_FORMATTING"|\n", STRING_VIEW_ARGS(upper));
   return 0;
 }
