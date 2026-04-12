@@ -111,8 +111,12 @@ sview Lower(sview sv)
   return result;
 }
 
-#define STRING_VIEW_FORMATTING "%.*s"
-#define STRING_VIEW_ARGS(s) (s).count, (s).data
+void printsv(sview sv)
+{
+  #define STRING_VIEW_FORMATTING "%.*s"
+  #define STRING_VIEW_ARGS(s) (s).count, (s).data
+  printf(""STRING_VIEW_FORMATTING"\n", STRING_VIEW_ARGS(sv));
+}
 
 int main(int argc, char* argv[])
 {
@@ -128,5 +132,6 @@ int main(int argc, char* argv[])
   printf("|"STRING_VIEW_FORMATTING"|\n", STRING_VIEW_ARGS(upper));
   sview lower = Lower(name);
   printf("|"STRING_VIEW_FORMATTING"|\n", STRING_VIEW_ARGS(lower));
+  printsv(lower);
   return 0;
 }
