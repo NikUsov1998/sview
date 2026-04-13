@@ -118,20 +118,56 @@ void printsv(sview sv)
   printf(""STRING_VIEW_FORMATTING"\n", STRING_VIEW_ARGS(sv));
 }
 
+sview capitalize(sview str_view)
+{
+  char buffer[1024];
+  strncpy(buffer, str_view.data, str_view.count);
+
+  if (str_view.count > sizeof(buffer)) {
+    sview error = sv("String are too long!"); 
+    return error;
+  }
+
+  for (int i = 0; i < str_view.count; ++i) {
+    if ((islower(str_view.data[i]) && isspace(str_view.data[i-1])) || 
+        (islower(str_view.data[i]) && i == 0)) {
+      buffer[i] = toupper(str_view.data[i]);
+    }
+    else {
+      buffer[i] = str_view.data[i];
+    }
+  }
+
+  sview result = {
+    .data = buffer,
+    .count = strlen(buffer),
+  };
+  return result;
+}
+
+char* converter(sview sv)
+{
+  char* result;
+  return result;
+}
+
 int main(int argc, char* argv[])
 {
-  sview name = sv("Nick");
-  printf("%s, its yours first clean C project, do you like it?\n", name.data);
-  char buffer[64];
-  fgets(buffer, sizeof(buffer),stdin);
-  puts(buffer);
-  sview test_slice = sv("This, and that");
-  sview this = slice(&test_slice, ',');
-  printf("|"STRING_VIEW_FORMATTING"|\n", STRING_VIEW_ARGS(this));
-  sview upper = Upper(name);
-  printf("|"STRING_VIEW_FORMATTING"|\n", STRING_VIEW_ARGS(upper));
-  sview lower = Lower(name);
-  printf("|"STRING_VIEW_FORMATTING"|\n", STRING_VIEW_ARGS(lower));
-  printsv(lower);
+//  sview name = sv("Nick");
+//  printf("%s, its yours first clean C project, do you like it?\n", name.data);
+//  char buffer[64];
+//  fgets(buffer, sizeof(buffer),stdin);
+//  puts(buffer);
+//  sview test_slice = sv("This, and that");
+//  sview this = slice(&test_slice, ',');
+//  printf("|"STRING_VIEW_FORMATTING"|\n", STRING_VIEW_ARGS(this));
+//  sview upper = Upper(name);
+//  printf("|"STRING_VIEW_FORMATTING"|\n", STRING_VIEW_ARGS(upper));
+//  sview lower = Lower(name);
+//  printf("|"STRING_VIEW_FORMATTING"|\n", STRING_VIEW_ARGS(lower));
+//  printsv(lower);
+  sview testSentance = sv("this is multiple words starting with capital letters");
+  sview capitalized = capitalize(testSentance);
+  printsv(capitalized);
   return 0;
 }
