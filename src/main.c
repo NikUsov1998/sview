@@ -120,8 +120,7 @@ void printsv(sview sv)
 
 sview capitalize(sview str_view)
 {
-  char buffer[1024];
-  strncpy(buffer, str_view.data, str_view.count);
+  char buffer[1024] = {};
 
   if (str_view.count > sizeof(buffer)) {
     sview error = sv("String are too long!"); 
@@ -153,20 +152,20 @@ char* converter(sview sv)
 
 int main(int argc, char* argv[])
 {
-//  sview name = sv("Nick");
-//  printf("%s, its yours first clean C project, do you like it?\n", name.data);
-//  char buffer[64];
-//  fgets(buffer, sizeof(buffer),stdin);
-//  puts(buffer);
-//  sview test_slice = sv("This, and that");
-//  sview this = slice(&test_slice, ',');
-//  printf("|"STRING_VIEW_FORMATTING"|\n", STRING_VIEW_ARGS(this));
-//  sview upper = Upper(name);
-//  printf("|"STRING_VIEW_FORMATTING"|\n", STRING_VIEW_ARGS(upper));
-//  sview lower = Lower(name);
-//  printf("|"STRING_VIEW_FORMATTING"|\n", STRING_VIEW_ARGS(lower));
-//  printsv(lower);
-  sview testSentance = sv("this is multiple words starting with capital letters");
+  sview name = sv("Nick");
+  printf("%s, its yours first clean C project, do you like it?\n", name.data);
+  char buffer[64];
+  fgets(buffer, sizeof(buffer),stdin);
+  puts(buffer);
+  sview test_slice = sv("This, and that");
+  sview this = slice(&test_slice, ',');
+  printf("|"STRING_VIEW_FORMATTING"|\n", STRING_VIEW_ARGS(this));
+  sview upper = Upper(name);
+  printf("|"STRING_VIEW_FORMATTING"|\n", STRING_VIEW_ARGS(upper));
+  sview lower = Lower(name);
+  printf("|"STRING_VIEW_FORMATTING"|\n", STRING_VIEW_ARGS(lower));
+  printsv(lower);
+  sview testSentance = sv("this is width string with multiple words that starts with lowercase words and this words will be capitalized after function call!");
   sview capitalized = capitalize(testSentance);
   printsv(capitalized);
   return 0;
