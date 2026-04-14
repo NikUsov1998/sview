@@ -70,7 +70,6 @@ sview slice(sview* sv, char separator)
 }
 //TODO: Back converter - converts string view back to a Null terminated string for backward compatability
 //      String view funtions:
-//        capitalize()
 //        casefold()
 //        center(width, fillchar)
 //        count(x, start, end)
@@ -147,6 +146,24 @@ sview capitalize(sview str_view)
 char* converter(sview sv)
 {
   char* result;
+  return result;
+}
+
+sview center(sview sv, int width, char filler)
+{
+  sview result;
+  return result;
+}
+
+sview left(sview sv, int width, char filler)
+{
+  sview result;
+  return result;
+}
+
+sview right(sview sv, int width, char filler)
+{
+  sview result;
   return result;
 }
 
