@@ -151,7 +151,19 @@ char* converter(sview sv)
 
 sview center(sview sv, int width, char filler)
 {
-  sview result;
+  char buffer[width + 1];
+  memset(buffer, filler, sizeof(buffer));
+  buffer[width + 1] = '\0';
+  int base_center = sizeof(buffer) / 2;
+  int sv_center = sv.count / 2;
+  int true_center = base_center - sv_center;
+  for (int i = 0; i < sv.count; ++i) {
+    buffer[true_center + i] = sv.data[i];
+  }
+  sview result = {
+    .data = buffer,
+    .count = strlen(buffer),
+  };
   return result;
 }
 
@@ -185,5 +197,7 @@ int main(int argc, char* argv[])
   sview testSentance = sv("this is width string with multiple words that starts with lowercase words and this words will be capitalized after function call!");
   sview capitalized = capitalize(testSentance);
   printsv(capitalized);
+  sview word = sv("uncomfortablylongwordlooooooooooonger");
+  printsv(center(word, 50, '_'));
   return 0;
 }
