@@ -151,9 +151,9 @@ char* converter(sview sv)
 
 sview center(sview sv, int width, char filler)
 {
-  char buffer[width + 1];
+  char buffer[width];
   memset(buffer, filler, sizeof(buffer));
-  buffer[width + 1] = '\0';
+  buffer[width] = '\0';
   int base_center = sizeof(buffer) / 2;
   int sv_center = sv.count / 2;
   int true_center = base_center - sv_center;
@@ -169,9 +169,9 @@ sview center(sview sv, int width, char filler)
 
 sview left(sview sv, int width, char filler)
 {
-  char buffer[width + 1];
+  char buffer[width];
   memset(buffer, filler, sizeof(buffer));
-  buffer[width + 1] = '\0';
+  buffer[width] = '\0';
   for (int i = 0; i < sv.count; ++i) {
     buffer[i] = sv.data[i];  
   }
@@ -184,7 +184,17 @@ sview left(sview sv, int width, char filler)
 
 sview right(sview sv, int width, char filler)
 {
-  sview result;
+  char buffer[width];
+  memset(buffer, filler, sizeof(buffer));
+  buffer[width] = '\0';
+  int offset = width - sv.count;
+  for (int i = 0; i < sv.count; ++i) {
+    buffer[offset + i] = sv.data[i]; 
+  }
+  sview result = {
+    .data = buffer,
+    .count = sizeof(buffer),
+  };
   return result;
 }
 
@@ -209,5 +219,6 @@ int main(int argc, char* argv[])
   sview word = sv("uncomfortablylongwordlooooooooooonger");
   printsv(center(word, 50, '_'));
   printsv(left(word, 50, '_'));
+  printsv(right(word, 50, '_'));
   return 0;
 }
