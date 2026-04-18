@@ -169,7 +169,16 @@ sview center(sview sv, int width, char filler)
 
 sview left(sview sv, int width, char filler)
 {
-  sview result;
+  char buffer[width + 1];
+  memset(buffer, filler, sizeof(buffer));
+  buffer[width + 1] = '\0';
+  for (int i = 0; i < sv.count; ++i) {
+    buffer[i] = sv.data[i];  
+  }
+  sview result = {
+    .data = buffer,
+    .count = strlen(buffer),
+  };
   return result;
 }
 
@@ -199,5 +208,6 @@ int main(int argc, char* argv[])
   printsv(capitalized);
   sview word = sv("uncomfortablylongwordlooooooooooonger");
   printsv(center(word, 50, '_'));
+  printsv(left(word, 50, '_'));
   return 0;
 }
