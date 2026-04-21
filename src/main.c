@@ -1,6 +1,7 @@
 #include <ctype.h>
 #include <stddef.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 typedef struct
@@ -8,6 +9,17 @@ typedef struct
   const char* data;
   size_t count;
 } sview;
+
+typedef struct
+{
+  sview** items;
+  size_t count;
+} sview_array_t;
+
+#define sv_array(...) (sview_array_t){ \
+  .items = (sview*[]){__VA_ARGS__}, \
+  .count = sizeof((sview*[]){__VA_ARGS__}) / sizeof(sview*) \
+}
 
 sview sv(const char* Cstring)
 {
@@ -71,7 +83,6 @@ sview slice(sview* sv, char separator)
 //TODO: Back converter - converts string view back to a Null terminated string for backward compatability
 //      String view funtions:
 //        casefold()
-//        center(width, fillchar)
 //        count(x, start, end)
 //        encode(encoding, errors)
 //        endswith(suffix, start, end)
@@ -197,6 +208,46 @@ sview right(sview sv, int width, char filler)
   };
   return result;
 }
+sview join(const sview_array_t* array, char* separator)
+{
+  size_t buffer_size = 0;
+  for (size_t i = 0; i < array->count; ++i) {
+    buffer_size += array->items[i]->count;
+
+    if (i < array->count - 1) {
+      buffer_size += strlen(separator);
+    }
+  }
+  
+  char* buffer = malloc(buffer_size);
+
+  if (!buffer) {
+    return (sview){NULL, 0};
+  }
+
+  int ptr = 0;
+  for (size_t i = 0; i < array->count; ++i) {
+    
+    int tmp = 0;
+    for (int j = 0; j < array->items[i]->count; ++j) {
+      tmp = ptr + j;
+      buffer[tmp] = array->items[i]->data[j];
+    }
+
+    ptr = tmp + 1;
+    if (i < array->count - 1) {
+      buffer[ptr] = *separator;
+      ++ptr;
+    }
+  }
+
+  sview result = {
+    .data = buffer,
+    .count = strlen(buffer),
+  };
+
+  return result;
+}
 
 int main(int argc, char* argv[])
 {
@@ -220,5 +271,17 @@ int main(int argc, char* argv[])
   printsv(center(word, 50, '_'));
   printsv(left(word, 50, '_'));
   printsv(right(word, 50, '_'));
+
+  sview qwer = sv("qwer");
+  sview asdf = sv("as");
+  sview zxcv = sv("zxcvbibos");
+  sview zxcv1 = sv("zxcvhaha");
+  sview zxcv2 = sv("zxcvbeniz");
+  sview zxcv3 = sv("zxcv");
+  sview_array_t words = sv_array(&qwer, &asdf, &zxcv, &zxcv1, &zxcv2, &zxcv3);
+
+  sview result = join(&words, ","); 
+  printsv(result);
+
   return 0;
 }
