@@ -286,6 +286,33 @@ bool endswith(sview string, sview suffix, int start, int end)
   return false;
 }
 
+bool startswith(sview string, sview suffix, int start, int end)
+{
+  sview tmp = string;
+  int offset = tmp.count - end;
+  sview_chop_right(&tmp, offset);
+  sview_chop_left(&tmp, start);
+
+  char buffer[tmp.count];
+  buffer[tmp.count] = '\0';
+
+  for (int i = 0; i < sizeof(buffer); ++i) {
+    buffer[i] = tmp.data[i]; 
+  }
+  char sample[suffix.count];
+  sample[suffix.count] = '\0';
+  for (int i = 0; i < sizeof(sample); ++i) {
+    sample[i] = buffer[i];
+  }
+
+  int result = strcmp(sample, suffix.data);
+  
+  if (result == 0) {
+    return true;
+  }
+
+  return false;
+}
 //TODO: 
 //        count(x, start, end)
 //        startswith(suffix, start, end)
@@ -335,8 +362,11 @@ int main(int argc, char* argv[])
   //char* converted = converter(src, &converted);
   //printf(converted);
   sview suffix = sv("TED");
-  bool result = endswith(src, suffix, 0, strlen(src.data));
-  printf("%i\n", result);
+  bool endresult = endswith(src, suffix, 0, strlen(src.data));
+  printf("%i\n", endresult);
 
+  sview suffix2 = sv("son");
+  bool startresult = startswith(src, suffix2, 1, strlen(src.data));
+  printf("%i\n", startresult);
   return 0;
 }
