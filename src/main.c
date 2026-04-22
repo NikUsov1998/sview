@@ -338,7 +338,6 @@ bool startswith(sview string, sview suffix, int start, int end)
 //        count(x, start, end)
 //        find(sub, start, end)
 //        rfind(sub, start, end)
-//        title(sv)
 //        partition(sv, sep)
 //        converter
 
