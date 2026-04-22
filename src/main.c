@@ -121,7 +121,7 @@ void printsv(sview sv)
   printf(""STRING_VIEW_FORMATTING"\n", STRING_VIEW_ARGS(sv));
 }
 
-sview capitalize(sview str_view)
+sview title(sview str_view)
 {
   char buffer[1024] = {};
 
@@ -133,6 +133,27 @@ sview capitalize(sview str_view)
   for (int i = 0; i < str_view.count; ++i) {
     if ((islower(str_view.data[i]) && isspace(str_view.data[i-1])) || 
         (islower(str_view.data[i]) && i == 0)) {
+      buffer[i] = toupper(str_view.data[i]);
+    }
+    else {
+      buffer[i] = str_view.data[i];
+    }
+  }
+
+  sview result = {
+    .data = buffer,
+    .count = strlen(buffer),
+  };
+  return result;
+
+}
+
+sview capitalize(sview str_view)
+{
+  char buffer[1024] = {};
+
+  for (int i = 0; i < str_view.count; ++i) {
+    if (islower(str_view.data[i]) && i == 0) {
       buffer[i] = toupper(str_view.data[i]);
     }
     else {
@@ -339,6 +360,8 @@ int main(int argc, char* argv[])
   sview testSentance = sv("this is width string with multiple words that starts with lowercase words and this words will be capitalized after function call!");
   sview capitalized = capitalize(testSentance);
   printsv(capitalized);
+  sview titled = title(testSentance);
+  printsv(titled);
   sview word = sv("uncomfortablylongwordlooooooooooonger");
   printsv(center(word, 50, '_'));
   printsv(left(word, 50, '_'));
