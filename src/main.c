@@ -261,12 +261,24 @@ char* converter(sview sv, char** result)
 
 bool endswith(sview string, sview suffix, int start, int end)
 {
-  printf("%i\n", string.count);
-  printf("%i\n", suffix.count);
-  printf("str:\t%s\n", &string.data[string.count - suffix.count]);
-  printf("suf:\t%s\n", suffix.data);
-  int result = strcmp(&string.data[string.count - suffix.count], suffix.data);
-  printf("%i\n", result);
+  sview tmp = string;
+  int offset = tmp.count - end;
+  sview_chop_right(&tmp, offset);
+  sview_chop_left(&tmp, start);
+
+  char buffer[tmp.count];
+  buffer[tmp.count] = '\0';
+
+  for (int i = 0; i < sizeof(buffer); ++i) {
+    buffer[i] = tmp.data[i]; 
+  }
+
+  sview sv_res = {
+    .data = buffer,
+    .count = strlen(buffer),
+  };
+
+  int result = strcmp(&sv_res.data[sv_res.count - suffix.count], suffix.data);
   
   if (result == 0) {
     return true;
@@ -286,37 +298,37 @@ bool endswith(sview string, sview suffix, int start, int end)
 
 int main(int argc, char* argv[])
 {
-  //sview name = sv("Nick");
-  //printf("%s, its yours first clean C project, do you like it?\n", name.data);
-  //char buffer[64];
-  //fgets(buffer, sizeof(buffer),stdin);
-  //puts(buffer);
-  //sview test_slice = sv("This, and that");
-  //sview this = slice(&test_slice, ',');
-  //printf("|"STRING_VIEW_FORMATTING"|\n", STRING_VIEW_ARGS(this));
-  //sview upper = Upper(name);
-  //printf("|"STRING_VIEW_FORMATTING"|\n", STRING_VIEW_ARGS(upper));
-  //sview lower = Lower(name);
-  //printf("|"STRING_VIEW_FORMATTING"|\n", STRING_VIEW_ARGS(lower));
-  //printsv(lower);
-  //sview testSentance = sv("this is width string with multiple words that starts with lowercase words and this words will be capitalized after function call!");
-  //sview capitalized = capitalize(testSentance);
-  //printsv(capitalized);
-  //sview word = sv("uncomfortablylongwordlooooooooooonger");
-  //printsv(center(word, 50, '_'));
-  //printsv(left(word, 50, '_'));
-  //printsv(right(word, 50, '_'));
+  sview name = sv("Nick");
+  printf("%s, its yours first clean C project, do you like it?\n", name.data);
+  char buffer[64];
+  fgets(buffer, sizeof(buffer),stdin);
+  puts(buffer);
+  sview test_slice = sv("This, and that");
+  sview this = slice(&test_slice, ',');
+  printf("|"STRING_VIEW_FORMATTING"|\n", STRING_VIEW_ARGS(this));
+  sview upper = Upper(name);
+  printf("|"STRING_VIEW_FORMATTING"|\n", STRING_VIEW_ARGS(upper));
+  sview lower = Lower(name);
+  printf("|"STRING_VIEW_FORMATTING"|\n", STRING_VIEW_ARGS(lower));
+  printsv(lower);
+  sview testSentance = sv("this is width string with multiple words that starts with lowercase words and this words will be capitalized after function call!");
+  sview capitalized = capitalize(testSentance);
+  printsv(capitalized);
+  sview word = sv("uncomfortablylongwordlooooooooooonger");
+  printsv(center(word, 50, '_'));
+  printsv(left(word, 50, '_'));
+  printsv(right(word, 50, '_'));
 
-  //sview qwer = sv("qwer");
-  //sview asdf = sv("as");
-  //sview zxcv = sv("zxcvbibos");
-  //sview zxcv1 = sv("zxcvhaha");
-  //sview zxcv2 = sv("zxcvbeniz");
-  //sview zxcv3 = sv("zxcv");
-  //sview_array_t words = sv_array(&qwer, &asdf, &zxcv, &zxcv1, &zxcv2, &zxcv3);
+  sview qwer = sv("qwer");
+  sview asdf = sv("as");
+  sview zxcv = sv("zxcvbibos");
+  sview zxcv1 = sv("zxcvhaha");
+  sview zxcv2 = sv("zxcvbeniz");
+  sview zxcv3 = sv("zxcv");
+  sview_array_t words = sv_array(&qwer, &asdf, &zxcv, &zxcv1, &zxcv2, &zxcv3);
 
-  //sview joined = join(&words, ","); 
-  //printsv(joined);
+  sview joined = join(&words, ","); 
+  printsv(joined);
 
   sview src = sv("converTED");
   ////printf("Word:\t%s\nLenght:\t%i\n", src.data, src.count);
@@ -324,7 +336,7 @@ int main(int argc, char* argv[])
   //printf(converted);
   sview suffix = sv("TED");
   bool result = endswith(src, suffix, 0, strlen(src.data));
-  printf("%b\n", result);
+  printf("%i\n", result);
 
   return 0;
 }
