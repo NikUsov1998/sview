@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 
 typedef struct
 {
@@ -258,15 +259,22 @@ char* converter(sview sv, char** result)
   return *result;
 }
 
-int endswith(sview suffix, int start, int end)
+bool endswith(sview string, sview suffix, int start, int end)
 {
-#define TRUE = 1
-#define FALSE = 0
-
-  return 0;
+  printf("%i\n", string.count);
+  printf("%i\n", suffix.count);
+  printf("str:\t%s\n", &string.data[string.count - suffix.count]);
+  printf("suf:\t%s\n", suffix.data);
+  int result = strcmp(&string.data[string.count - suffix.count], suffix.data);
+  printf("%i\n", result);
+  
+  if (result == 0) {
+    return true;
+  }
+  return false;
 }
+
 //TODO: 
-//      String view funtions:
 //        count(x, start, end)
 //        startswith(suffix, start, end)
 //        endswith(suffix, start, end)
@@ -310,9 +318,13 @@ int main(int argc, char* argv[])
   //sview joined = join(&words, ","); 
   //printsv(joined);
 
-  sview src = sv("converted");
-  //printf("Word:\t%s\nLenght:\t%i\n", src.data, src.count);
-  char* converted = converter(src, &converted);
-  printf(converted);
+  sview src = sv("converTED");
+  ////printf("Word:\t%s\nLenght:\t%i\n", src.data, src.count);
+  //char* converted = converter(src, &converted);
+  //printf(converted);
+  sview suffix = sv("TED");
+  bool result = endswith(src, suffix, 0, strlen(src.data));
+  printf("%b\n", result);
+
   return 0;
 }
