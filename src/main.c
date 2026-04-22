@@ -315,8 +315,6 @@ bool startswith(sview string, sview suffix, int start, int end)
 }
 //TODO: 
 //        count(x, start, end)
-//        startswith(suffix, start, end)
-//        endswith(suffix, start, end)
 //        find(sub, start, end)
 //        rfind(sub, start, end)
 //        title(sv)
