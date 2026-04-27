@@ -347,33 +347,54 @@ int find (sview string, sview substr, int start)
 }
 
 
-int rfind (sview string, sview substr, int start)
+int count(sview string, sview substr, int start)
 {
-  int result[32];
-  for (int i = string.count; i > start; --i) {
+  int result = 0;
+  for (int i = start; i < string.count; ++i) {
     if (string.data[i] == substr.data[0]) {
       for (int j = 0; j < substr.count;) {
         //string.data[i + j] == substr.data[j];
         if (string.data[i + j] == substr.data[j]) {
           ++j;
           if (j >= substr.count) {
-            return i;
+            ++result;
           }
         }
-        else {
-          return -1;
-        }
       }
+      return result;
     }
   }
   return -1;
-
 }
+
+
+//int rfind (sview string, sview substr, int start)
+//{
+//  int result[32];
+//  for (int i = string.count; i > start; --i) {
+//    if (string.data[i] == substr.data[substr.count - 1]) {
+//      for (int j = substr.count; j > 0;) {
+//        //string.data[i + j] == substr.data[j];
+//        int k = 0;
+//        if (string.data[i - k] == substr.data[j]) {
+//          --j;
+//          ++k;
+//          if (j >= 0) {
+//            return i;
+//          }
+//        }
+//        else {
+//          return -1;
+//        }
+//      }
+//    }
+//  }
+//  return -1;
+//}
+//
 //TODO: 
 //        count(x, start, end)
-//        find(sub, start, end)
 //        rfind(sub, start, end)
-//        partition(sv, sep)
 //        converter
 
 int main(int argc, char* argv[])
@@ -426,8 +447,8 @@ int main(int argc, char* argv[])
   sview findstr = sv("Find some substring");
   sview sub = sv("some");
   int index = find(findstr, sub, 0);
-  int r_index = rfind(findstr, sub, 0);
   printf("%i\n", index);
-  printf("%i\n", r_index);
+  int counter = count(findstr, sub, 0);
+  printf("%i\n", counter);
   return 0;
 }
