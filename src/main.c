@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
+#include <errno.h>
 
 typedef struct
 {
@@ -17,10 +18,14 @@ typedef struct
   size_t count;
 } sview_array_t;
 
+#define MAX_BUFFER_SIZE 4096
+#define MAX_BUFFER_ERROR 1
+
 #define sv_array(...) (sview_array_t){ \
   .items = (sview*[]){__VA_ARGS__}, \
   .count = sizeof((sview*[]){__VA_ARGS__}) / sizeof(sview*) \
 }
+
 
 sview sv(const char* Cstring)
 {
@@ -257,16 +262,20 @@ sview join(const sview_array_t* array, char* separator)
   return result;
 }
 
-char* converter(sview sv, char** result)
+char* converter(sview* sv, char* buffer, size_t buflen)
 {
+  if (buflen > MAX_BUFFER_SIZE) return NULL;
+  buffer[buflen] = '\0'; 
+  strncpy(buffer, sv->data, buflen);
   //char result[sv.count + 1];
   //memcpy(*result, sv.data, sv.count + 1);
-  for (int i = 0; i < sv.count; ++i) {
-    *result[i] = sv.data[i];
-  }
-  result[sv.count + 1] = '\0';
+  //for (int i = 0; i < sv.count; ++i) {
+  //  *result[i] = sv.data[i];
+  //}
+  //result[sv.count + 1] = '\0';
 
-  return *result;
+
+  return "Test";
 }
 
 bool endswith(sview string, sview suffix, int start, int end)
@@ -398,56 +407,62 @@ int count(sview string, sview substr, int start)
 
 int main(int argc, char* argv[])
 {
-  sview name = sv("Nick");
-  printf("%s, its yours first clean C project, do you like it?\n", name.data);
-  char buffer[64];
-  fgets(buffer, sizeof(buffer),stdin);
-  puts(buffer);
-  sview test_slice = sv("This, and that");
-  sview this = slice(&test_slice, ',');
-  printf("|"STRING_VIEW_FORMATTING"|\n", STRING_VIEW_ARGS(this));
-  sview upper = Upper(name);
-  printf("|"STRING_VIEW_FORMATTING"|\n", STRING_VIEW_ARGS(upper));
-  sview lower = Lower(name);
-  printf("|"STRING_VIEW_FORMATTING"|\n", STRING_VIEW_ARGS(lower));
-  printsv(lower);
-  sview testSentance = sv("this is width string with multiple words that starts with lowercase words and this words will be capitalized after function call!");
-  sview capitalized = capitalize(testSentance);
-  printsv(capitalized);
-  sview titled = title(testSentance);
-  printsv(titled);
-  sview word = sv("uncomfortablylongwordlooooooooooonger");
-  printsv(center(word, 50, '_'));
-  printsv(left(word, 50, '_'));
-  printsv(right(word, 50, '_'));
+  //sview name = sv("Nick");
+  //printf("%s, its yours first clean C project, do you like it?\n", name.data);
+  //char buffer[64];
+  //fgets(buffer, sizeof(buffer),stdin);
+  //puts(buffer);
+  //sview test_slice = sv("This, and that");
+  //sview this = slice(&test_slice, ',');
+  //printf("|"STRING_VIEW_FORMATTING"|\n", STRING_VIEW_ARGS(this));
+  //sview upper = Upper(name);
+  //printf("|"STRING_VIEW_FORMATTING"|\n", STRING_VIEW_ARGS(upper));
+  //sview lower = Lower(name);
+  //printf("|"STRING_VIEW_FORMATTING"|\n", STRING_VIEW_ARGS(lower));
+  //printsv(lower);
+  //sview testSentance = sv("this is width string with multiple words that starts with lowercase words and this words will be capitalized after function call!");
+  //sview capitalized = capitalize(testSentance);
+  //printsv(capitalized);
+  //sview titled = title(testSentance);
+  //printsv(titled);
+  //sview word = sv("uncomfortablylongwordlooooooooooonger");
+  //printsv(center(word, 50, '_'));
+  //printsv(left(word, 50, '_'));
+  //printsv(right(word, 50, '_'));
 
-  sview qwer = sv("qwer");
-  sview asdf = sv("as");
-  sview zxcv = sv("zxcvbibos");
-  sview zxcv1 = sv("zxcvhaha");
-  sview zxcv2 = sv("zxcvbeniz");
-  sview zxcv3 = sv("zxcv");
-  sview_array_t words = sv_array(&qwer, &asdf, &zxcv, &zxcv1, &zxcv2, &zxcv3);
+  //sview qwer = sv("qwer");
+  //sview asdf = sv("as");
+  //sview zxcv = sv("zxcvbibos");
+  //sview zxcv1 = sv("zxcvhaha");
+  //sview zxcv2 = sv("zxcvbeniz");
+  //sview zxcv3 = sv("zxcv");
+  //sview_array_t words = sv_array(&qwer, &asdf, &zxcv, &zxcv1, &zxcv2, &zxcv3);
 
-  sview joined = join(&words, ","); 
-  printsv(joined);
+  //sview joined = join(&words, ","); 
+  //printsv(joined);
 
-  sview src = sv("converTED");
-  ////printf("Word:\t%s\nLenght:\t%i\n", src.data, src.count);
-  //char* converted = converter(src, &converted);
-  //printf(converted);
-  sview suffix = sv("TED");
-  bool endresult = endswith(src, suffix, 0, strlen(src.data));
-  printf("%i\n", endresult);
+  //sview src = sv("converTED");
+  //////printf("Word:\t%s\nLenght:\t%i\n", src.data, src.count);
+  ////char* converted = converter(src, &converted);
+  ////printf(converted);
+  //sview suffix = sv("TED");
+  //bool endresult = endswith(src, suffix, 0, strlen(src.data));
+  //printf("%i\n", endresult);
 
-  sview suffix2 = sv("son");
-  bool startresult = startswith(src, suffix2, 1, strlen(src.data));
-  printf("%i\n", startresult);
-  sview findstr = sv("some Find some some substringsome");
-  sview sub = sv("some");
-  int index = find(findstr, sub, 0);
-  printf("%i\n", index);
-  int counter = count(findstr, sub, 0);
-  printf("%i\n", counter);
+  //sview suffix2 = sv("son");
+  //bool startresult = startswith(src, suffix2, 1, strlen(src.data));
+  //printf("%i\n", startresult);
+  //sview findstr = sv("some Find some some substringsome");
+  //sview sub = sv("some");
+  //int index = find(findstr, sub, 0);
+  //printf("%i\n", index);
+  //int counter = count(findstr, sub, 0);
+  //printf("%i\n", counter);
+  sview conv= sv("test");
+  //printf("Word:\t%s\nLenght:\t%i\n", src.data, src.count);
+
+  char converted1[conv.count];
+  converter(&conv, converted1, conv.count);
+  printf(converted1);
   return 0;
 }
